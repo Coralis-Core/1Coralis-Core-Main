@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "wire response",
+  "description": "Exactly one of 'output' (HTTP 200) or 'error' (HTTP 4xx/5xx) is present. 'Exactly one' is not expressible in the schema subset and is enforced by the transport and by conformance tests. Reserved error codes: unavailable, invalid_input, unauthorized, unknown_capability, internal; any other code must be declared by the capability's contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "output": {},
+    "error": {
+      "type": "object",
+      "required": ["code"],
+      "additionalProperties": false,
+      "properties": {
+        "code": {"type": "string", "minLength": 1},
+        "message": {"type": "string"}
+      }
+    }
+  }
+}

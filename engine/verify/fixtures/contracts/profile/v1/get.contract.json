@@ -1,0 +1,27 @@
+{
+  "$schema": "../../../../../../contracts/contract.schema.json",
+  "capability": "profile.v1.get",
+  "version": "1.0.0",
+  "kind": "request",
+  "summary": "A composite capability (provided by a core that itself consumes identity and stats): who a user is and how active the chat is. Fields whose source is unavailable are simply absent.",
+  "input": {
+    "type": "object", "required": ["chat_id", "user_id"], "additionalProperties": false,
+    "properties": {"chat_id": {"type": "integer"}, "user_id": {"type": "integer"}}
+  },
+  "output": {
+    "type": "object", "required": ["user_id"], "additionalProperties": false,
+    "properties": {
+      "user_id": {"type": "integer"},
+      "name": {"type": "string"},
+      "messages": {"type": "integer", "minimum": 0}
+    }
+  },
+  "examples": [
+    {"name": "shape_only", "input": {"chat_id": 1, "user_id": 7}, "output": {"user_id": 7}, "match": "schema"}
+  ],
+  "invalid_inputs": [
+    {"name": "user_missing", "input": {"chat_id": 1}},
+    {"name": "ids_are_strings", "input": {"chat_id": "1", "user_id": "7"}},
+    {"name": "extra_field", "input": {"chat_id": 1, "user_id": 7, "x": 1}}
+  ]
+}

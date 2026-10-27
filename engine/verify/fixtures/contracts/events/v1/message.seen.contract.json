@@ -1,0 +1,78 @@
+{
+  "$schema": "../../../../../../contracts/contract.schema.json",
+  "capability": "chat.v1.message.seen",
+  "version": "1.0.0",
+  "kind": "event",
+  "summary": "A message was observed in a chat (published by a frontend or a core).",
+  "payload": {
+    "type": "object",
+    "required": [
+      "chat_id",
+      "user_id"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "chat_id": {
+        "type": "integer"
+      },
+      "user_id": {
+        "type": "integer"
+      },
+      "message_id": {
+        "type": "integer"
+      },
+      "text": {
+        "type": "string"
+      }
+    }
+  },
+  "examples": [
+    {
+      "name": "plain",
+      "payload": {
+        "chat_id": 1,
+        "user_id": 7,
+        "message_id": 10,
+        "text": "hi"
+      }
+    },
+    {
+      "name": "minimal",
+      "payload": {
+        "chat_id": 1,
+        "user_id": 7
+      }
+    },
+    {
+      "name": "negative_chat_id",
+      "payload": {
+        "chat_id": -1001234567890,
+        "user_id": 7,
+        "text": "سلام"
+      }
+    }
+  ],
+  "invalid_payloads": [
+    {
+      "name": "user_id_missing",
+      "payload": {
+        "chat_id": 1
+      }
+    },
+    {
+      "name": "chat_id_is_string",
+      "payload": {
+        "chat_id": "1",
+        "user_id": 7
+      }
+    },
+    {
+      "name": "extra_field",
+      "payload": {
+        "chat_id": 1,
+        "user_id": 7,
+        "x": true
+      }
+    }
+  ]
+}

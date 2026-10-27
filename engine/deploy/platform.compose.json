@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "contracts_dirs": [
+    "../domain-contracts"
+  ],
+  "cores": [
+    {
+      "id": "counter-demo",
+      "kind": "http",
+      "capabilities": [
+        "counter.v1.increment",
+        "counter.v1.get",
+        "counter.v1.reset"
+      ],
+      "options": {
+        "url": "http://counter:9001",
+        "token_env": "CORE_TOKEN",
+        "timeout_ms": 3000
+      }
+    }
+  ],
+  "serve": {
+    "listen": "0.0.0.0:8080",
+    "token_env": "PLATFORM_TOKEN",
+    "expose": [
+      "counter.v1.increment",
+      "counter.v1.get",
+      "counter.v1.reset"
+    ]
+  }
+}

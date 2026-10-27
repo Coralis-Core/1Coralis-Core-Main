@@ -1,0 +1,1 @@
+{"version":1,"serve":{"expose":["x.v1.y","*"]}}

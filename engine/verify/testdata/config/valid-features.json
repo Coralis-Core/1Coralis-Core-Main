@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "cores": [
+    {"id": "a", "kind": "http", "options": {"url": "http://127.0.0.1:9001"}},
+    {"id": "out", "kind": "gateway", "options": {"allowed_domains": ["api.example.com"]}}
+  ],
+  "roles": {"gateway": ["out"]},
+  "bindings": [
+    {"capability": "x.v1.y", "cores": ["a"], "retries": 2},
+    {"capability": "gateway.v1.request", "cores": ["role:gateway"], "mode": "single"}
+  ],
+  "wrappers": [
+    {"capability": "x.v1.y", "kind": "policy", "placement": "outer", "check_contract": false},
+    {"capability": "x.v1.y", "kind": "audit", "placement": "inner", "options": {"level": "info"}}
+  ],
+  "subscriptions": [{"event": "x.v1.seen", "core": "a", "timeout_ms": 500}],
+  "resilience": {"retries": 1, "retry_delay_ms": 20, "breaker_failures": -1, "breaker_cooldown_ms": 1000},
+  "limits": {"max_depth": 8},
+  "contracts_dirs": ["../inner/contracts"]
+}

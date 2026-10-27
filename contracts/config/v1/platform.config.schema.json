@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "platform configuration v1",
+  "description": "The mounting surface. cores: what is mounted (kind 'http' is built in; any other kind must be registered by the host program). roles: named groups of cores (a binding refers to one as 'role:<name>'; a role is only a grouping). bindings: which cores serve which capability, in order, plus how it is consumed (mode single|fallback|fanout, on_error skip|fail for fanout, timeout_ms). serve: how this platform is exposed (expose = the only capabilities callers can see; empty = none besides core.v1.*). extensions: free space for anything you mount on top (the platform never interprets it). wrappers: around-decorators per capability (placement outer|inner, check_contract default true). subscriptions: event -> core, best effort. resilience: retries and circuit breaker defaults. limits: protections, all off by default. contracts_dirs: extra contract folders (e.g. a nested project's).",
+  "type": "object",
+  "required": [
+    "version"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "integer",
+      "enum": [
+        1
+      ]
+    },
+    "default_timeout_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "cores": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "type": "string",
+            "minLength": 1
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "options": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "roles": {
+      "type": "object"
+    },
+    "bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "capability",
+          "cores"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "capability": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cores": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "single",
+              "fallback",
+              "fanout"
+            ]
+          },
+          "on_error": {
+            "type": "string",
+            "enum": [
+              "skip",
+              "fail"
+            ]
+          },
+          "timeout_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "retries": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "serve": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "listen": {
+          "type": "string",
+          "minLength": 1
+        },
+        "token_env": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expose": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "extensions": {
+      "type": "object"
+    },
+    "wrappers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "capability",
+          "kind"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "capability": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "type": "string",
+            "minLength": 1
+          },
+          "placement": {
+            "enum": [
+              "outer",
+              "inner"
+            ]
+          },
+          "options": {
+            "type": "object"
+          },
+          "check_contract": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "subscriptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "event",
+          "core"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "event": {
+            "type": "string",
+            "minLength": 1
+          },
+          "core": {
+            "type": "string",
+            "minLength": 1
+          },
+          "timeout_ms": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "resilience": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "retries": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "retry_delay_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "breaker_failures": {
+          "type": "integer",
+          "minimum": -1
+        },
+        "breaker_cooldown_ms": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_depth": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "contracts_dirs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

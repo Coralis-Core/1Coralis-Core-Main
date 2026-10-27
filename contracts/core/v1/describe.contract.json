@@ -1,0 +1,92 @@
+{
+  "$schema": "../../contract.schema.json",
+  "capability": "core.v1.describe",
+  "version": "1.0.0",
+  "kind": "request",
+  "summary": "A core describes itself: its name and which capabilities and events it provides. The platform uses it to verify the configuration and to discover capabilities.",
+  "input": {
+    "type": "object",
+    "additionalProperties": false
+  },
+  "output": {
+    "type": "object",
+    "required": [
+      "name",
+      "capabilities"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "type": "string",
+        "minLength": 1
+      },
+      "version": {
+        "type": "string"
+      },
+      "capabilities": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "publishes": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "subscribes": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "name": "minimal",
+      "input": {},
+      "output": {
+        "name": "a-core",
+        "capabilities": []
+      },
+      "match": "schema"
+    },
+    {
+      "name": "full",
+      "input": {},
+      "output": {
+        "name": "a-core",
+        "version": "1.2.0",
+        "capabilities": [
+          "x.v1.y"
+        ],
+        "publishes": [
+          "x.v1.event"
+        ],
+        "subscribes": []
+      },
+      "match": "schema"
+    }
+  ],
+  "invalid_inputs": [
+    {
+      "name": "unexpected_field",
+      "input": {
+        "x": 1
+      }
+    },
+    {
+      "name": "not_an_object",
+      "input": []
+    },
+    {
+      "name": "scalar",
+      "input": "a"
+    }
+  ]
+}

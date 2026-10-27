@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "cores": [
+    {
+      "id": "a",
+      "kind": "k",
+      "capabilities": [
+        "x.v1.y"
+      ]
+    }
+  ],
+  "bindings": [
+    {
+      "capability": "x.v1.y",
+      "cores": [
+        "a"
+      ],
+      "mode": "around"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+# Runs the platform + a demo core.   cd engine/deploy && cp .env.example .env (fill the tokens) && docker compose up --build
+#
+# ISOLATION (decision: cores never talk to each other or to the internet directly):
+#   - every core sits on its OWN internal network together with the platform only,
+#     so core <-> core traffic is impossible and cores have no route to the internet;
+#   - outbound calls go: core -> platform -> a core of kind "gateway" (runs inside the
+#     platform process, so only the platform container needs the `edge` network).
+# To add a core: a new service + its own `net-<core>` network (internal: true), listed in the config.
+services:
+  platform:
+    build:
+      context: ../..
+      dockerfile: engine/deploy/Dockerfile
+    ports:
+      - "127.0.0.1:8080:8080"          # local only; put a TLS reverse proxy in front before exposing it
+    volumes:
+      - ./platform.compose.json:/config/platform.json:ro
+      - ../../contracts:/contracts:ro
+      - ../../domain-contracts:/domain-contracts:ro   # config contracts_dirs ("../domain-contracts") resolves here
+    environment:
+      PLATFORM_TOKEN: ${PLATFORM_TOKEN:?set PLATFORM_TOKEN in .env}
+      CORE_TOKEN: ${CORE_TOKEN:?set CORE_TOKEN in .env}
+    depends_on:
+      counter:
+        condition: service_healthy
+    networks: [edge, net-counter]
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+
+  counter:                             # DEMO core (in-memory counters). Replace with your real core.
+    image: python:3.12-slim
+    working_dir: /srv
+    volumes:
+      - ../../adapters/python:/srv/adapters/python:ro
+      - ../../examples/counter-demo-python:/srv/examples/counter-demo-python:ro
+    command: ["python", "/srv/examples/counter-demo-python/main.py"]
+    environment:
+      HOST: 0.0.0.0
+      PORT: "9001"
+      CORE_TOKEN: ${CORE_TOKEN:?set CORE_TOKEN in .env}
+      PYTHONDONTWRITEBYTECODE: "1"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 9001), 2)"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    networks: [net-counter]         # ONLY its own internal network
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+
+networks:
+  edge: {}                             # the only network with internet access
+  net-counter:
+    internal: true                     # no route out; shared only with the platform

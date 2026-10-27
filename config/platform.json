@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "cores": [
+    {
+      "id": "counter-demo",
+      "kind": "http",
+      "capabilities": [
+        "counter.v1.increment",
+        "counter.v1.get",
+        "counter.v1.reset"
+      ],
+      "options": {
+        "url": "http://127.0.0.1:9001",
+        "token_env": "CORE_TOKEN"
+      }
+    }
+  ],
+  "serve": {
+    "listen": "127.0.0.1:8080",
+    "expose": [
+      "counter.v1.increment",
+      "counter.v1.get",
+      "counter.v1.reset"
+    ]
+  },
+  "contracts_dirs": [
+    "../domain-contracts"
+  ]
+}

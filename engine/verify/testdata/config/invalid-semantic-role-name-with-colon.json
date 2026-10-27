@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "cores": [
+    {
+      "id": "a",
+      "kind": "k",
+      "capabilities": [
+        "x.v1.y"
+      ]
+    }
+  ],
+  "roles": {
+    "a:b": [
+      "a"
+    ]
+  }
+}

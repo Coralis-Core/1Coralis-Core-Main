@@ -1,0 +1,24 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "capability": "counter.v1.reset",
+  "version": "1.0.0",
+  "kind": "request",
+  "idempotent": true,
+  "summary": "Delete a named counter. 'removed' tells whether it existed.",
+  "input": {
+    "type": "object",
+    "required": ["name"],
+    "additionalProperties": false,
+    "properties": {"name": {"type": "string", "minLength": 1}}
+  },
+  "output": {
+    "type": "object",
+    "required": ["removed"],
+    "additionalProperties": false,
+    "properties": {"removed": {"type": "boolean"}}
+  },
+  "examples": [
+    {"name": "absent", "input": {"name": "never-used"}, "output": {"removed": false}}
+  ],
+  "invalid_inputs": [{"name": "missing_name", "input": {}}]
+}

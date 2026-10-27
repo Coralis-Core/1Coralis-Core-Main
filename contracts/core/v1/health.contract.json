@@ -1,0 +1,64 @@
+{
+  "$schema": "../../contract.schema.json",
+  "capability": "core.v1.health",
+  "version": "1.0.0",
+  "kind": "request",
+  "summary": "Liveness/readiness of a core. ok = fully working, degraded = working with limits, down = cannot serve.",
+  "input": {
+    "type": "object",
+    "additionalProperties": false
+  },
+  "output": {
+    "type": "object",
+    "required": [
+      "status"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "status": {
+        "type": "string",
+        "enum": [
+          "ok",
+          "degraded",
+          "down"
+        ]
+      },
+      "detail": {
+        "type": "string"
+      }
+    }
+  },
+  "examples": [
+    {
+      "name": "ok",
+      "input": {},
+      "output": {
+        "status": "ok"
+      },
+      "match": "schema"
+    },
+    {
+      "name": "degraded_with_detail",
+      "input": {},
+      "output": {
+        "status": "degraded",
+        "detail": "slow storage"
+      },
+      "match": "schema"
+    }
+  ],
+  "invalid_inputs": [
+    {
+      "name": "unexpected_field",
+      "input": {
+        "deep": true
+      }
+    },
+    {
+      "name": "not_an_object",
+      "input": [
+        1
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "wire fan-out output (the 'output' of a capability bound with mode fanout)",
+  "description": "What POST /v1/call returns as 'output' for a capability whose binding has mode fanout: one entry per source, in configured order. 'source' is an opaque label (its position, as text), never a core id. Each entry has exactly one of 'output' (checked against the capability's own output schema) or 'error' (a code the capability's contract allows, or a generic one). 'Exactly one' is enforced by the transport, not by this schema subset.",
+  "type": "object",
+  "required": ["results"],
+  "additionalProperties": false,
+  "properties": {
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source"],
+        "additionalProperties": false,
+        "properties": {
+          "source": {"type": "string", "minLength": 1},
+          "output": {},
+          "error": {
+            "type": "object",
+            "required": ["code"],
+            "additionalProperties": false,
+            "properties": {
+              "code": {"type": "string", "minLength": 1},
+              "message": {"type": "string"}
+            }
+          }
+        }
+      }
+    }
+  }
+}

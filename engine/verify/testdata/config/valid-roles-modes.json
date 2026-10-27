@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "cores": [
+    {
+      "id": "a",
+      "kind": "k",
+      "capabilities": [
+        "x.v1.y"
+      ]
+    },
+    {
+      "id": "b",
+      "kind": "k",
+      "capabilities": [
+        "x.v1.y"
+      ]
+    },
+    {
+      "id": "c",
+      "kind": "k",
+      "capabilities": [
+        "x.v1.y"
+      ]
+    }
+  ],
+  "roles": {
+    "main": [
+      "a"
+    ],
+    "sources": [
+      "b",
+      "c"
+    ]
+  },
+  "bindings": [
+    {
+      "capability": "x.v1.y",
+      "cores": [
+        "role:main"
+      ],
+      "mode": "single"
+    },
+    {
+      "capability": "x.v1.z",
+      "cores": [
+        "role:sources",
+        "a"
+      ],
+      "mode": "fanout",
+      "on_error": "fail",
+      "timeout_ms": 800
+    }
+  ]
+}

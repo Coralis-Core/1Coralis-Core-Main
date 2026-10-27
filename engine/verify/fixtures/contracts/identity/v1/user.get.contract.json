@@ -1,0 +1,121 @@
+{
+  "$schema": "../../../../../../contracts/contract.schema.json",
+  "capability": "identity.v1.user.get",
+  "version": "1.0.0",
+  "kind": "request",
+  "summary": "Look up a user by numeric ID.",
+  "input": {
+    "type": "object",
+    "required": [
+      "id"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "integer"
+      }
+    }
+  },
+  "output": {
+    "type": "object",
+    "required": [
+      "id"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "username": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "language": {
+        "type": "string"
+      }
+    }
+  },
+  "errors": [
+    "not_found"
+  ],
+  "examples": [
+    {
+      "name": "found",
+      "input": {
+        "id": 7
+      },
+      "output": {
+        "id": 7,
+        "username": "sara",
+        "name": "Sara",
+        "language": "fa"
+      }
+    },
+    {
+      "name": "found_minimal_fields",
+      "input": {
+        "id": 8
+      },
+      "output": {
+        "id": 8
+      }
+    },
+    {
+      "name": "found_id_beyond_int32",
+      "input": {
+        "id": 5000000000
+      },
+      "output": {
+        "id": 5000000000,
+        "username": "big"
+      }
+    },
+    {
+      "name": "missing",
+      "input": {
+        "id": 999
+      },
+      "error": "not_found"
+    },
+    {
+      "name": "negative_id_is_valid_but_absent",
+      "input": {
+        "id": -5
+      },
+      "error": "not_found"
+    }
+  ],
+  "invalid_inputs": [
+    {
+      "name": "id_is_string",
+      "input": {
+        "id": "7"
+      }
+    },
+    {
+      "name": "id_missing",
+      "input": {}
+    },
+    {
+      "name": "extra_field",
+      "input": {
+        "id": 7,
+        "x": 1
+      }
+    },
+    {
+      "name": "id_is_fraction",
+      "input": {
+        "id": 7.5
+      }
+    },
+    {
+      "name": "not_an_object",
+      "input": [
+        7
+      ]
+    }
+  ]
+}

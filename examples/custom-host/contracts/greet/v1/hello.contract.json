@@ -1,0 +1,27 @@
+{
+  "$schema": "../../../../../contracts/contract.schema.json",
+  "capability": "greet.v1.hello",
+  "version": "1.0.0",
+  "kind": "request",
+  "idempotent": true,
+  "summary": "Return a greeting for a name.",
+  "input": {
+    "type": "object",
+    "required": ["name"],
+    "additionalProperties": false,
+    "properties": {"name": {"type": "string", "minLength": 1}}
+  },
+  "output": {
+    "type": "object",
+    "required": ["message"],
+    "additionalProperties": false,
+    "properties": {"message": {"type": "string"}}
+  },
+  "examples": [
+    {"name": "basic", "input": {"name": "Sara"}, "output": {"message": "Hello, Sara!"}}
+  ],
+  "invalid_inputs": [
+    {"name": "empty_name", "input": {"name": ""}},
+    {"name": "missing_name", "input": {}}
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "$schema": "../../contract.schema.json",
+  "capability": "gateway.v1.request",
+  "version": "1.0.0",
+  "kind": "request",
+  "summary": "One outbound HTTP(S) call made on behalf of a core. Cores have no internet access of their own: everything that leaves goes through whichever core plays the gateway role, which applies the allow-list, size and time limits, key injection and logging. Only http and https URLs are accepted; anything else is invalid_input.",
+  "input": {
+    "type": "object",
+    "required": [
+      "url"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "method": {
+        "enum": [
+          "GET",
+          "HEAD",
+          "POST",
+          "PUT",
+          "PATCH",
+          "DELETE"
+        ]
+      },
+      "url": {
+        "type": "string",
+        "minLength": 8
+      },
+      "headers": {
+        "type": "object"
+      },
+      "body": {
+        "type": "string"
+      }
+    }
+  },
+  "output": {
+    "type": "object",
+    "required": [
+      "status",
+      "body"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "status": {
+        "type": "integer",
+        "minimum": 100,
+        "maximum": 599
+      },
+      "headers": {
+        "type": "object"
+      },
+      "body": {
+        "type": "string"
+      }
+    }
+  },
+  "errors": [
+    "domain_not_allowed",
+    "blocked_address",
+    "too_large",
+    "upstream_error"
+  ],
+  "examples": [
+    {
+      "name": "domain_not_on_the_list",
+      "input": {
+        "url": "https://not-allowed.invalid/x"
+      },
+      "error": "domain_not_allowed"
+    }
+  ],
+  "invalid_inputs": [
+    {
+      "name": "no_url",
+      "input": {}
+    },
+    {
+      "name": "bad_method",
+      "input": {
+        "url": "https://a.example/",
+        "method": "TRACE"
+      }
+    },
+    {
+      "name": "extra_field",
+      "input": {
+        "url": "https://a.example/",
+        "proxy": "x"
+      }
+    }
+  ]
+}

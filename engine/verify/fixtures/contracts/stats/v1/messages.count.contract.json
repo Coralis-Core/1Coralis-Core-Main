@@ -1,0 +1,71 @@
+{
+  "$schema": "../../../../../../contracts/contract.schema.json",
+  "capability": "stats.v1.messages.count",
+  "version": "1.0.0",
+  "kind": "request",
+  "summary": "Number of messages seen in a chat since the provider started.",
+  "input": {
+    "type": "object",
+    "required": [
+      "chat_id"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "chat_id": {
+        "type": "integer"
+      }
+    }
+  },
+  "output": {
+    "type": "object",
+    "required": [
+      "messages"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "messages": {
+        "type": "integer",
+        "minimum": 0
+      }
+    }
+  },
+  "examples": [
+    {
+      "name": "fresh",
+      "input": {
+        "chat_id": 1
+      },
+      "output": {
+        "messages": 0
+      }
+    },
+    {
+      "name": "fresh_other_chat",
+      "input": {
+        "chat_id": -1001234567890
+      },
+      "output": {
+        "messages": 0
+      }
+    }
+  ],
+  "invalid_inputs": [
+    {
+      "name": "chat_id_is_string",
+      "input": {
+        "chat_id": "1"
+      }
+    },
+    {
+      "name": "chat_id_missing",
+      "input": {}
+    },
+    {
+      "name": "extra_field",
+      "input": {
+        "chat_id": 1,
+        "x": 1
+      }
+    }
+  ]
+}

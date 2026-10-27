@@ -1,0 +1,1 @@
+{"version":1,"cores":[{"id":"a","kind":"http"}],"subscriptions":[{"event":"x.v1.seen","core":"ghost"}]}

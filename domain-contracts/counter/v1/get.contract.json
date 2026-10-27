@@ -1,0 +1,24 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "capability": "counter.v1.get",
+  "version": "1.0.0",
+  "kind": "request",
+  "idempotent": true,
+  "summary": "Read a named counter (0 if it was never incremented).",
+  "input": {
+    "type": "object",
+    "required": ["name"],
+    "additionalProperties": false,
+    "properties": {"name": {"type": "string", "minLength": 1}}
+  },
+  "output": {
+    "type": "object",
+    "required": ["value"],
+    "additionalProperties": false,
+    "properties": {"value": {"type": "integer", "minimum": 0}}
+  },
+  "examples": [
+    {"name": "unknown_counter", "input": {"name": "never-used"}, "output": {"value": 0}}
+  ],
+  "invalid_inputs": [{"name": "missing_name", "input": {}}]
+}

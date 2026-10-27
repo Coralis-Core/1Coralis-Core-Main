@@ -1,0 +1,110 @@
+{
+  "$schema": "../../../../../../contracts/contract.schema.json",
+  "capability": "identity.v1.chat.get",
+  "version": "1.0.0",
+  "kind": "request",
+  "summary": "Look up a chat/group/channel by numeric ID.",
+  "input": {
+    "type": "object",
+    "required": [
+      "id"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "integer"
+      }
+    }
+  },
+  "output": {
+    "type": "object",
+    "required": [
+      "id"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "name": {
+        "type": "string"
+      },
+      "language": {
+        "type": "string"
+      }
+    }
+  },
+  "errors": [
+    "not_found"
+  ],
+  "examples": [
+    {
+      "name": "found",
+      "input": {
+        "id": 1
+      },
+      "output": {
+        "id": 1,
+        "name": "Team",
+        "language": "fa"
+      }
+    },
+    {
+      "name": "found_minimal_fields",
+      "input": {
+        "id": 2
+      },
+      "output": {
+        "id": 2
+      }
+    },
+    {
+      "name": "found_negative_group_id",
+      "input": {
+        "id": -1001234567890
+      },
+      "output": {
+        "id": -1001234567890,
+        "name": "Supergroup"
+      }
+    },
+    {
+      "name": "missing",
+      "input": {
+        "id": 999
+      },
+      "error": "not_found"
+    }
+  ],
+  "invalid_inputs": [
+    {
+      "name": "id_is_string",
+      "input": {
+        "id": "7"
+      }
+    },
+    {
+      "name": "id_missing",
+      "input": {}
+    },
+    {
+      "name": "extra_field",
+      "input": {
+        "id": 7,
+        "x": 1
+      }
+    },
+    {
+      "name": "id_is_fraction",
+      "input": {
+        "id": 7.5
+      }
+    },
+    {
+      "name": "not_an_object",
+      "input": [
+        7
+      ]
+    }
+  ]
+}

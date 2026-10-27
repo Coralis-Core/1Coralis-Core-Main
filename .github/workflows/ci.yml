@@ -1,0 +1,51 @@
+name: ci
+on:
+  push:
+  pull_request:
+
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: {go-version: "1.22"}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - name: Repository hygiene (no merge-conflict markers, no tracked build leftovers)
+        run: |
+          if git grep -n -I -E '^(<{7}|>{7})'; then echo 'merge-conflict markers found'; exit 1; fi
+          if git ls-files | grep -E '__pycache__|\.pyc$|(^|/)verify\.log$'; then echo 'build leftovers are tracked'; exit 1; fi
+      - name: gofmt
+        run: test -z "$(gofmt -l engine contracts scripts examples)"
+      - name: Go vet + race tests, Python and Node adapter tests
+        run: ./scripts/test.sh
+      - name: Live end-to-end demo (Python core, then Node core)
+        run: |
+          ./scripts/demo.sh python
+          ./scripts/demo.sh node
+
+  grpc:   # separate module: needs network for google.golang.org
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: {go-version: "1.22"}
+      - name: tidy, vet, race tests
+        working-directory: engine/contrib/grpc
+        run: |
+          go mod tidy
+          go vet ./...
+          go test -race -count=1 ./...
+
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the platform image
+        run: docker build -f engine/deploy/Dockerfile -t platform:ci .
+      - name: Compose config is valid
+        working-directory: engine/deploy
+        run: CORE_TOKEN=x PLATFORM_TOKEN=y docker compose config -q

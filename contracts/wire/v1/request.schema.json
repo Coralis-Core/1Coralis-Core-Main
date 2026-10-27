@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "wire request (POST /v1/call)",
+  "description": "The body any caller sends to any core or platform. 'input' is a JSON value validated against the capability's own input schema. 'meta' is optional free key-value space (string values) carried end to end and never interpreted by the platform; 'string values only' is enforced by the transport (the schema subset has no per-value rule).",
+  "type": "object",
+  "required": [
+    "capability",
+    "input"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "capability": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input": {},
+    "meta": {
+      "type": "object"
+    }
+  }
+}

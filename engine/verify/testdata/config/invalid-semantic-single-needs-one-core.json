@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "cores": [
+    {
+      "id": "a",
+      "kind": "k",
+      "capabilities": [
+        "x.v1.y"
+      ]
+    },
+    {
+      "id": "b",
+      "kind": "k",
+      "capabilities": [
+        "x.v1.y"
+      ]
+    }
+  ],
+  "roles": {
+    "both": [
+      "a",
+      "b"
+    ]
+  },
+  "bindings": [
+    {
+      "capability": "x.v1.y",
+      "cores": [
+        "role:both"
+      ],
+      "mode": "single"
+    }
+  ]
+}
